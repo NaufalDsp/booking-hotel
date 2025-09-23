@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { useSession, signOut } from "next-auth/react";
 import clsx from "clsx";
@@ -13,6 +14,31 @@ const NavLink = () => {
 
   return (
     <>
+      {session?.user ? (
+        <div className="flex items-center justify-end md:order-2">
+          <div className="hidden text-sm bg-gray-50 border rounded-full md:me-0 md:block focus:ring-4 focus:ring-gray-300">
+            <Image
+              className="size-8 rounded-full"
+              src={session.user.image || "/avatar.svg"}
+              width={48}
+              height={48}
+              alt="avatar"
+            />
+          </div>
+          <div className="hidden md:flex items-center">
+            <button
+              type="button"
+              onClick={() => {
+                signOut();
+              }}
+              className="py-2 px-4 bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-sm cursor-pointer"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
@@ -85,7 +111,7 @@ const NavLink = () => {
                   My Reservation
                 </Link>
               </li>
-              {session.user.role === "admin" && (
+              {session.user?.role === "admin" && (
                 <>
                   <li>
                     <Link
@@ -107,11 +133,10 @@ const NavLink = () => {
                   </li>
                 </>
               )}
-              <li className="pt-2 md:pt-0">
+              <li className="pt-2 md:pt-0 md:hidden">
                 <button
                   onClick={() => {
                     signOut();
-                    handleLinkClick();
                   }}
                   className="md:hidden py-2.5 px-4 bg-red-400 text-white hover:bg-red-600 rounded-sm cursor-pointer"
                 >
@@ -124,7 +149,7 @@ const NavLink = () => {
               <Link
                 href="/signin"
                 onClick={handleLinkClick}
-                className="py-2.5 px-6 bg-orange-400 text-white hover:bg-orange-500 rounded-sm block md:inline-block"
+                className="py-2.5 px-6 bg-orange-400 text-white hover:bg-orange-500 rounded-sm block"
               >
                 Sign In
               </Link>
