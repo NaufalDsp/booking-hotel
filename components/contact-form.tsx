@@ -1,7 +1,21 @@
+"use client";
+
+import { useActionState } from "react";
+import { ContactMessage } from "@/lib/actions";
+
 const ContactForm = () => {
+  const [state, formAction] = useActionState(ContactMessage, null);
   return (
     <div className="bg-white p-8 rounded-sm shadow-sm">
-      <form action="">
+      {state?.message ? (
+        <div
+          className="p-4 mb-4 text-sm text-gray-800 rounded-lg bg-gray-50"
+          role="alert"
+        >
+          <div className="font-medium">{state.message}</div>
+        </div>
+      ) : null}
+      <form action={formAction}>
         <div className="grid md:grid-cols-2 gap-7 mt-6">
           <div>
             <input
@@ -11,7 +25,7 @@ const ContactForm = () => {
               placeholder="Name*"
             />
             <div aria-live="polite" aria-atomic="true">
-              <p className="text-sm text-red-500 mt-2">message</p>
+              <p className="text-sm text-red-500 mt-2">{state?.errors?.name}</p>
             </div>
           </div>
           <div>
@@ -22,7 +36,9 @@ const ContactForm = () => {
               placeholder="johndoe@example.com*"
             />
             <div aria-live="polite" aria-atomic="true">
-              <p className="text-sm text-red-500 mt-2">message</p>
+              <p className="text-sm text-red-500 mt-2">
+                {state?.errors?.email}
+              </p>
             </div>
           </div>
           <div className="md:col-span-2">
@@ -33,7 +49,9 @@ const ContactForm = () => {
               placeholder="Subject*"
             />
             <div aria-live="polite" aria-atomic="true">
-              <p className="text-sm text-red-500 mt-2">message</p>
+              <p className="text-sm text-red-500 mt-2">
+                {state?.errors?.subject}
+              </p>
             </div>
           </div>
           <div className="md:col-span-2">
@@ -44,7 +62,9 @@ const ContactForm = () => {
               placeholder="Your Message*"
             ></textarea>
             <div aria-live="polite" aria-atomic="true">
-              <p className="text-sm text-red-500 mt-2">message</p>
+              <p className="text-sm text-red-500 mt-2">
+                {state?.errors?.message}
+              </p>
             </div>
           </div>
         </div>
