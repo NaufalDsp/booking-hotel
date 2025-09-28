@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import { ContactSchema } from "@/lib/zod";
 import { prisma } from "@/lib/prisma";
