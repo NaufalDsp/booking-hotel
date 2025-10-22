@@ -46,6 +46,7 @@ const CreateForm = () => {
             htmlFor="input-file"
             className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-50 relative"
           >
+            
             <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
               <div className="flex flex-col items-center justify-center">
                 <IoCloudUploadOutline className="size-8" />
