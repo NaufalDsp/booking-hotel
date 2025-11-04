@@ -1,6 +1,34 @@
+"use client";
+import { useRef, useState } from "react";
+import { type PutBlobResult } from "@vercel/blob";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
 const CreateForm = () => {
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleUpload = async () => {
+    if (!inputFileRef.current?.files) return null;
+    const file = inputFileRef.current.files[0];
+    const formData = new FormData();
+    formData.set("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "PUT",
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.status !== 200) {
+        setMessage(data.message);
+      }
+      const img = data as PutBlobResult;
+      setImage(img.url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <form action="">
       <div className="grid md:grid-cols-12 gap-5">
@@ -46,7 +74,6 @@ const CreateForm = () => {
             htmlFor="input-file"
             className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-50 relative"
           >
-            
             <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
               <div className="flex flex-col items-center justify-center">
                 <IoCloudUploadOutline className="size-8" />
@@ -56,7 +83,13 @@ const CreateForm = () => {
                 </p>
               </div>
             </div>
-            <input type="file" id="input-file" className="hidden" />
+            <input
+              type="file"
+              ref={inputFileRef}
+              onChange={handleUpload}
+              id="input-file"
+              className="hidden"
+            />
           </label>
           <div className="mb-4">
             <input
