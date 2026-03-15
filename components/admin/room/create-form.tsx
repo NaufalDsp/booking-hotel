@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { type PutBlobResult } from "@vercel/blob";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import Image from "next/image";
 
 const CreateForm = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -49,8 +50,7 @@ const CreateForm = () => {
               name="description"
               rows={8}
               className="py-2 px-4 rounded-sm border border-gray-400 w-full"
-              placeholder="Description"
-            ></textarea>
+              placeholder="Description"></textarea>
             <div aria-live="polite" aria-atomic="true">
               <span className="text-sm text-red-500 mt-2">message</span>
             </div>
@@ -72,24 +72,34 @@ const CreateForm = () => {
         <div className="col-span-4 bg-white p-4">
           <label
             htmlFor="input-file"
-            className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-50 relative"
-          >
+            className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-50 relative">
             <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
               <div className="flex flex-col items-center justify-center">
                 <IoCloudUploadOutline className="size-8" />
                 <p className="mb-1 text-sm font-bold">Select Image</p>
+                
                 <p className="text-xs">
                   SVG, PNG, JPG, GIF, or Others (max: 4MB)
                 </p>
               </div>
             </div>
-            <input
-              type="file"
-              ref={inputFileRef}
-              onChange={handleUpload}
-              id="input-file"
-              className="hidden"
-            />
+            {!image ? (
+              <input
+                type="file"
+                ref={inputFileRef}
+                onChange={handleUpload}
+                id="input-file"
+                className="hidden"
+              />
+            ) : (
+              <Image
+                src={image}
+                alt="image"
+                width={640}
+                height={360}
+                className="rounded-md absolute aspect-video object-cover"
+              />
+            )}
           </label>
           <div className="mb-4">
             <input
@@ -115,8 +125,7 @@ const CreateForm = () => {
           </div>
           <button
             type="submit"
-            className="bg-orange-400 text-white w-full hover:bg-orange-500 py-2.5 px-6 md:px-10 text-lg font-semibold cursor-pointer"
-          >
+            className="bg-orange-400 text-white w-full hover:bg-orange-500 py-2.5 px-6 md:px-10 text-lg font-semibold cursor-pointer">
             Save
           </button>
         </div>
