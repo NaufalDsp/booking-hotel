@@ -1,34 +1,38 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { type PutBlobResult } from "@vercel/blob";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import Image from "next/image";
+import { BarLoader } from "react-spinners";
 
 const CreateForm = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
+  const [pending, setTransition] = useTransition();
 
-  const handleUpload = async () => {
+  const handleUpload = () => {
     if (!inputFileRef.current?.files) return null;
     const file = inputFileRef.current.files[0];
     const formData = new FormData();
     formData.set("file", file);
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "PUT",
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.status !== 200) {
-        setMessage(data.message);
+    setTransition(async () => {
+      try {
+        const response = await fetch("/api/upload", {
+          method: "PUT",
+          body: formData,
+        });
+        const data = await response.json();
+        if (response.status !== 200) {
+          setMessage(data.message);
+          return;
+        }
+        const img = data as PutBlobResult;
+        setImage(img.url);
+      } catch (error) {
+        console.log(error);
       }
-      const img = data as PutBlobResult;
-      setImage(img.url);
-    } catch (error) {
-      console.log(error);
-    }
+    });
   };
   return (
     <form action="">
@@ -75,12 +79,16 @@ const CreateForm = () => {
             className="flex flex-col mb-4 items-center justify-center aspect-video border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-50 relative">
             <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
               <div className="flex flex-col items-center justify-center">
+                {pending ? <BarLoader /> : null}
                 <IoCloudUploadOutline className="size-8" />
                 <p className="mb-1 text-sm font-bold">Select Image</p>
-                
-                <p className="text-xs">
-                  SVG, PNG, JPG, GIF, or Others (max: 4MB)
-                </p>
+                {message ? (
+                  <p className="text-xs text-red-500">{message}</p>
+                ) : (
+                  <p className="text-xs">
+                    SVG, PNG, JPG, GIF, or Others (max: 4MB)
+                  </p>
+                )}
               </div>
             </div>
             {!image ? (
