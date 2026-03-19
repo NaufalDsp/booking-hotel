@@ -9,14 +9,14 @@ const CreateForm = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
-  const [pending, setTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
   const handleUpload = () => {
     if (!inputFileRef.current?.files) return null;
     const file = inputFileRef.current.files[0];
     const formData = new FormData();
     formData.set("file", file);
-    setTransition(async () => {
+    startTransition(async () => {
       try {
         const response = await fetch("/api/upload", {
           method: "PUT",
@@ -34,6 +34,18 @@ const CreateForm = () => {
       }
     });
   };
+
+  const deleteImage = (image: string) => {
+    startTransition(async()=>{
+      try {
+        await fetch(`/api/upload/?imageUrl=${image}`, {
+          method:"DELETE"
+        })
+      } catch (error) {
+        
+      }
+    })
+  }
   return (
     <form action="">
       <div className="grid md:grid-cols-12 gap-5">
