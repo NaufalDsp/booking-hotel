@@ -36,16 +36,17 @@ const CreateForm = () => {
   };
 
   const deleteImage = (image: string) => {
-    startTransition(async()=>{
+    startTransition(async () => {
       try {
         await fetch(`/api/upload/?imageUrl=${image}`, {
-          method:"DELETE"
-        })
+          method: "DELETE",
+        });
+        setImage("");
       } catch (error) {
-        
+        console.log(error);
       }
-    })
-  }
+    });
+  };
   return (
     <form action="">
       <div className="grid md:grid-cols-12 gap-5">
@@ -92,6 +93,10 @@ const CreateForm = () => {
             <div className="flex flex-col items-center justify-center text-gray-500 pt-5 pb-6 z-10">
               <div className="flex flex-col items-center justify-center">
                 {pending ? <BarLoader /> : null}
+                <button
+                  type="button"
+                  onClick={() => deleteImage(image)}
+                  className="flex items-center justify-center bg-transparent size-6 rounded-sm absolute right-1 top-1 text-white hover:bg-red-400"></button>
                 <IoCloudUploadOutline className="size-8" />
                 <p className="mb-1 text-sm font-bold">Select Image</p>
                 {message ? (
