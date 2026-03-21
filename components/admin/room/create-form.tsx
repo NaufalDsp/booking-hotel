@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState, useTransition } from "react";
 import { type PutBlobResult } from "@vercel/blob";
-import { IoCloudUploadOutline } from "react-icons/io5";
+import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import Image from "next/image";
 import { BarLoader } from "react-spinners";
 
@@ -96,7 +96,9 @@ const CreateForm = () => {
                 <button
                   type="button"
                   onClick={() => deleteImage(image)}
-                  className="flex items-center justify-center bg-transparent size-6 rounded-sm absolute right-1 top-1 text-white hover:bg-red-400"></button>
+                  className="flex items-center justify-center bg-transparent size-6 rounded-sm absolute right-1 top-1 text-white hover:bg-red-400">
+                  <IoTrashOutline className="size-4 text-transparent hover:text-white" />
+                </button>
                 <IoCloudUploadOutline className="size-8" />
                 <p className="mb-1 text-sm font-bold">Select Image</p>
                 {message ? (
